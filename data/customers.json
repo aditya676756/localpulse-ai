@@ -1,0 +1,93 @@
+[
+  {
+    "id": "cust_1",
+    "businessId": "biz_salon",
+    "name": "Sarah Jenkins",
+    "phone": "+1 (555) 712-4301",
+    "lastVisit": "2026-09-20",
+    "daysInactive": 56,
+    "totalVisits": 4,
+    "lifetimeSpend": 320,
+    "preferredService": "Keratin Silk Smooth Treatment",
+    "status": "Campaign Sent",
+    "lastCampaignSent": "2026-11-15T18:15:33.586Z"
+  },
+  {
+    "id": "cust_2",
+    "businessId": "biz_salon",
+    "name": "Rachel Adams",
+    "phone": "+1 (555) 884-2190",
+    "lastVisit": "2026-10-02",
+    "daysInactive": 44,
+    "totalVisits": 6,
+    "lifetimeSpend": 490,
+    "preferredService": "Hydra Glow Organic Facial",
+    "status": "Campaign Sent",
+    "lastCampaignSent": "2026-11-15T18:15:33.586Z"
+  },
+  {
+    "id": "cust_3",
+    "businessId": "biz_salon",
+    "name": "Daniel Cooper",
+    "phone": "+1 (555) 309-1288",
+    "lastVisit": "2026-10-10",
+    "daysInactive": 36,
+    "totalVisits": 3,
+    "lifetimeSpend": 135,
+    "preferredService": "Signature Haircut & Styling",
+    "status": "Campaign Sent",
+    "lastCampaignSent": "2026-11-15T18:15:33.586Z"
+  },
+  {
+    "id": "cust_4",
+    "businessId": "biz_salon",
+    "name": "Amanda Clarke",
+    "phone": "+1 (555) 443-8877",
+    "lastVisit": "2026-11-08",
+    "daysInactive": 7,
+    "totalVisits": 8,
+    "lifetimeSpend": 710,
+    "preferredService": "Signature Haircut & Styling",
+    "status": "Active",
+    "lastCampaignSent": null
+  },
+  {
+    "id": "cust_5",
+    "businessId": "biz_salon",
+    "name": "Chloe Vance",
+    "phone": "+1 (555) 219-6543",
+    "lastVisit": "2026-08-15",
+    "daysInactive": 92,
+    "totalVisits": 2,
+    "lifetimeSpend": 150,
+    "preferredService": "Luxury Gel Manicure & Pedicure",
+    "status": "Campaign Sent",
+    "lastCampaignSent": "2026-11-15T18:15:33.586Z"
+  },
+  {
+    "id": "cust_6",
+    "businessId": "biz_gym",
+    "name": "Kevin Vance",
+    "phone": "+1 (555) 604-1123",
+    "lastVisit": "2026-10-05",
+    "daysInactive": 41,
+    "totalVisits": 12,
+    "lifetimeSpend": 240,
+    "preferredService": "Monthly All-Access Membership",
+    "status": "Dormant",
+    "lastCampaignSent": null
+  },
+  {
+    "id": "cust_7",
+    "businessId": "biz_cafe",
+    "name": "Liam Scott",
+    "phone": "+1 (555) 432-8812",
+    "lastVisit": "2026-10-12",
+    "daysInactive": 34,
+    "totalVisits": 15,
+    "lifetimeSpend": 185,
+    "preferredService": "Reserved Co-Working Table",
+    "status": "Dormant",
+    "lastCampaignSent": null
+  }
+]

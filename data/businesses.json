@@ -1,0 +1,433 @@
+[
+  {
+    "id": "biz_salon",
+    "category": "salon",
+    "name": "Luxe Glow Salon & Spa",
+    "tagline": "Premium Hair, Skin & Wellness Studio",
+    "phone": "+1 (555) 349-8821",
+    "whatsappNumber": "+15553498821",
+    "address": "422 Maple Avenue, Downtown Metro",
+    "hours": "Mon-Sat: 10:00 AM - 8:30 PM | Sun: 11:00 AM - 6:00 PM",
+    "rating": 4.9,
+    "reviewsCount": 248,
+    "currency": "$",
+    "currencyCode": "USD",
+    "services": [
+      {
+        "id": "s1",
+        "name": "Signature Haircut & Styling",
+        "price": 45,
+        "duration": "45 mins",
+        "category": "Hair"
+      },
+      {
+        "id": "s2",
+        "name": "Keratin Silk Smooth Treatment",
+        "price": 140,
+        "duration": "90 mins",
+        "category": "Hair"
+      },
+      {
+        "id": "s3",
+        "name": "Hydra Glow Organic Facial",
+        "price": 75,
+        "duration": "60 mins",
+        "category": "Skin"
+      },
+      {
+        "id": "s4",
+        "name": "Aromatherapy Deep Tissue Massage",
+        "price": 95,
+        "duration": "60 mins",
+        "category": "Spa"
+      },
+      {
+        "id": "s5",
+        "name": "Luxury Gel Manicure & Pedicure",
+        "price": 55,
+        "duration": "50 mins",
+        "category": "Nails"
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Do you accept walk-ins?",
+        "a": "Yes, but priority is given to pre-booked appointments via WhatsApp to avoid wait times."
+      },
+      {
+        "q": "Is parking available?",
+        "a": "Yes, complimentary parking is available behind our studio on Maple Avenue."
+      },
+      {
+        "q": "What is your cancellation policy?",
+        "a": "You can reschedule or cancel free of charge up to 2 hours before your appointment."
+      }
+    ],
+    "offers": [
+      {
+        "code": "GLOW20",
+        "title": "20% Off First Visit",
+        "discount": "20%",
+        "description": "Valid on all hair and facial services for first-time clients."
+      },
+      {
+        "code": "WEEKDAYSPA",
+        "title": "Free Scalp Massage",
+        "discount": "Free Addon",
+        "description": "Complimentary scalp massage with any haircut Tue-Thu."
+      }
+    ],
+    "seoKeywords": [
+      "best hair salon near me",
+      "keratin treatment downtown",
+      "organic facial spa",
+      "bridal hair makeup"
+    ],
+    "stats": {
+      "monthlyVisitors": 420,
+      "aiBookings": 49,
+      "revenueGenerated": 3525,
+      "dormantReactivated": 14
+    }
+  },
+  {
+    "id": "biz_gym",
+    "category": "gym",
+    "name": "IronForge Fitness & Strength",
+    "tagline": "Modern 24/7 Strength, HIIT & Personal Training",
+    "phone": "+1 (555) 782-9901",
+    "whatsappNumber": "+15557829901",
+    "address": "108 Industrial Boulevard, Westside Hub",
+    "hours": "Open 24/7 for Members | Staffed: 6:00 AM - 10:00 PM",
+    "rating": 4.8,
+    "reviewsCount": 312,
+    "currency": "$",
+    "currencyCode": "USD",
+    "services": [
+      {
+        "id": "g1",
+        "name": "Free 1-Day Trial Pass",
+        "price": 0,
+        "duration": "Full Day",
+        "category": "Trial"
+      },
+      {
+        "id": "g2",
+        "name": "1-on-1 Fitness Assessment & PT Session",
+        "price": 50,
+        "duration": "60 mins",
+        "category": "Training"
+      },
+      {
+        "id": "g3",
+        "name": "Monthly All-Access Membership",
+        "price": 69,
+        "duration": "Monthly",
+        "category": "Membership"
+      },
+      {
+        "id": "g4",
+        "name": "Unlimited HIIT & CrossFit Batch Pass",
+        "price": 99,
+        "duration": "Monthly",
+        "category": "Classes"
+      },
+      {
+        "id": "g5",
+        "name": "Personalized Body Transformation (3 Months)",
+        "price": 280,
+        "duration": "90 Days",
+        "category": "Coaching"
+      }
+    ],
+    "faqs": [
+      {
+        "q": "What are your peak hours?",
+        "a": "Peak hours are 6:30-8:30 AM and 5:30-8:00 PM. Weekends are generally calm and spacious."
+      },
+      {
+        "q": "Are lockers and showers included?",
+        "a": "Yes, clean locker rooms, dry saunas, and showers with fresh towels are included for all members."
+      },
+      {
+        "q": "Can a beginner join?",
+        "a": "Absolutely! 65% of our members started with zero gym experience. We provide a free coach onboarding."
+      }
+    ],
+    "offers": [
+      {
+        "code": "IRONPASS",
+        "title": "Zero Sign-up Fee + Free PT",
+        "discount": "Save $49",
+        "description": "Sign up for any monthly pass and get your registration fee waived plus 1 free PT session."
+      }
+    ],
+    "seoKeywords": [
+      "gym near me 24/7",
+      "personal trainer westside",
+      "crossfit classes",
+      "best gym membership downtown"
+    ],
+    "stats": {
+      "monthlyVisitors": 680,
+      "aiBookings": 62,
+      "revenueGenerated": 4820,
+      "dormantReactivated": 21
+    }
+  },
+  {
+    "id": "biz_cafe",
+    "category": "cafe",
+    "name": "Artisan Roast & Co.",
+    "tagline": "Specialty Pour-Overs, Sourdough & Co-Working Lounge",
+    "phone": "+1 (555) 412-6500",
+    "whatsappNumber": "+15554126500",
+    "address": "77 Heritage Square, Arts District",
+    "hours": "Everyday: 7:30 AM - 9:00 PM",
+    "rating": 4.9,
+    "reviewsCount": 430,
+    "currency": "$",
+    "currencyCode": "USD",
+    "services": [
+      {
+        "id": "c1",
+        "name": "Reserved Co-Working Table (with Hi-Speed Wi-Fi & Coffee)",
+        "price": 15,
+        "duration": "3 Hours",
+        "category": "Workspace"
+      },
+      {
+        "id": "c2",
+        "name": "Tasting Flight (3 Single-Origin Coffees + Pastry)",
+        "price": 18,
+        "duration": "Per Person",
+        "category": "Experience"
+      },
+      {
+        "id": "c3",
+        "name": "Weekend Brunch Table Booking (2-4 Guests)",
+        "price": 25,
+        "duration": "Deposit applied to bill",
+        "category": "Dining"
+      },
+      {
+        "id": "c4",
+        "name": "Artisan Pastry Box Pre-order (6 Assorted)",
+        "price": 24,
+        "duration": "Pickup",
+        "category": "Bakery"
+      },
+      {
+        "id": "c5",
+        "name": "Private Evening Event / Gathering Space",
+        "price": 150,
+        "duration": "2 Hours",
+        "category": "Events"
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Do you have vegan and gluten-free choices?",
+        "a": "Yes! We offer oat/almond milk options, gluten-free sourdough sandwiches, and vegan pastries daily."
+      },
+      {
+        "q": "Is high-speed Wi-Fi free?",
+        "a": "Yes, 300 Mbps fiber Wi-Fi is available with power outlets at almost every table."
+      },
+      {
+        "q": "Are pets allowed?",
+        "a": "We are 100% dog-friendly both on the outdoor patio and the sunroom lounge!"
+      }
+    ],
+    "offers": [
+      {
+        "code": "BREWLOVE",
+        "title": "Buy 1 Specialty Latte, Get 1 50% Off",
+        "discount": "50% Off 2nd Drink",
+        "description": "Show this WhatsApp message on your next visit between 2 PM - 5 PM."
+      }
+    ],
+    "seoKeywords": [
+      "best coffee shop near me",
+      "study cafe with wifi",
+      "specialty coffee downtown",
+      "dog friendly cafe"
+    ],
+    "stats": {
+      "monthlyVisitors": 1250,
+      "aiBookings": 84,
+      "revenueGenerated": 2150,
+      "dormantReactivated": 38
+    }
+  },
+  {
+    "id": "biz_clinic",
+    "category": "clinic",
+    "name": "Apex Dental & Wellness Care",
+    "tagline": "Gentle, Pain-Free Modern Dentistry & Oral Care",
+    "phone": "+1 (555) 901-4478",
+    "whatsappNumber": "+15559014478",
+    "address": "210 Health Plaza, Suite 4B, Northway",
+    "hours": "Mon-Fri: 9:00 AM - 7:00 PM | Sat: 9:00 AM - 3:00 PM",
+    "rating": 4.9,
+    "reviewsCount": 189,
+    "currency": "$",
+    "currencyCode": "USD",
+    "services": [
+      {
+        "id": "d1",
+        "name": "Comprehensive Dental Checkup & Digital X-Ray",
+        "price": 60,
+        "duration": "30 mins",
+        "category": "Checkup"
+      },
+      {
+        "id": "d2",
+        "name": "Ultrasonic Teeth Cleaning & Polishing",
+        "price": 85,
+        "duration": "45 mins",
+        "category": "Hygiene"
+      },
+      {
+        "id": "d3",
+        "name": "Laser Teeth Whitening Session",
+        "price": 199,
+        "duration": "60 mins",
+        "category": "Cosmetic"
+      },
+      {
+        "id": "d4",
+        "name": "Invisalign / Clear Aligners Consultation",
+        "price": 0,
+        "duration": "30 mins",
+        "category": "Orthodontics"
+      },
+      {
+        "id": "d5",
+        "name": "Emergency Pain Relief Consultation",
+        "price": 75,
+        "duration": "30 mins",
+        "category": "Emergency"
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Do you accept dental insurance?",
+        "a": "Yes! We accept Delta Dental, Cigna, MetLife, Aetna, and offer easy 0% interest payment plans."
+      },
+      {
+        "q": "Is the teeth cleaning painful?",
+        "a": "Not at all. We use gentle ultrasonic technology with topical numbing gel if you have sensitive gums."
+      },
+      {
+        "q": "How soon can I get an appointment?",
+        "a": "WhatsApp bookings often get same-day or next-day slots during weekday openings."
+      }
+    ],
+    "offers": [
+      {
+        "code": "BRIGHTSMILE",
+        "title": "$49 New Patient Exam & X-Rays",
+        "discount": "Save $60",
+        "description": "Full checkup, oral cancer screening, and digital X-rays for new patients."
+      }
+    ],
+    "seoKeywords": [
+      "dentist near me",
+      "emergency tooth pain clinic",
+      "teeth whitening downtown",
+      "invisalign provider"
+    ],
+    "stats": {
+      "monthlyVisitors": 310,
+      "aiBookings": 39,
+      "revenueGenerated": 5420,
+      "dormantReactivated": 9
+    }
+  },
+  {
+    "id": "biz_tuition",
+    "category": "tuition",
+    "name": "Apex Minds Academy & Tutoring",
+    "tagline": "STEM, Coding & Test Prep Coaching for Grades 6-12",
+    "phone": "+1 (555) 662-3110",
+    "whatsappNumber": "+15556623110",
+    "address": "55 Learning Lane, Education Corridor",
+    "hours": "Mon-Sat: 2:00 PM - 9:00 PM | Sun: 10:00 AM - 4:00 PM",
+    "rating": 5,
+    "reviewsCount": 164,
+    "currency": "$",
+    "currencyCode": "USD",
+    "services": [
+      {
+        "id": "t1",
+        "name": "Free 1-on-1 Diagnostic Assessment & Demo Class",
+        "price": 0,
+        "duration": "45 mins",
+        "category": "Evaluation"
+      },
+      {
+        "id": "t2",
+        "name": "Math & Calculus Mastery Batch (Weekly)",
+        "price": 120,
+        "duration": "Monthly",
+        "category": "Mathematics"
+      },
+      {
+        "id": "t3",
+        "name": "Physics & Chemistry Problem Solving Lab",
+        "price": 130,
+        "duration": "Monthly",
+        "category": "Science"
+      },
+      {
+        "id": "t4",
+        "name": "SAT / ACT Intensive Score Booster Program",
+        "price": 250,
+        "duration": "6 Weeks",
+        "category": "TestPrep"
+      },
+      {
+        "id": "t5",
+        "name": "Python & AI for Teens - Project Course",
+        "price": 180,
+        "duration": "8 Weeks",
+        "category": "Coding"
+      }
+    ],
+    "faqs": [
+      {
+        "q": "What is the student-to-teacher ratio?",
+        "a": "We maintain small focused batches capped at 6 to 8 students per mentor to guarantee personal attention."
+      },
+      {
+        "q": "Do you offer online classes as well?",
+        "a": "Yes! Students can attend in-person or join via interactive live HD stream with whiteboard access."
+      },
+      {
+        "q": "Can parents track progress?",
+        "a": "Yes, automated weekly WhatsApp reports highlight homework completion, test scores, and teacher notes."
+      }
+    ],
+    "offers": [
+      {
+        "code": "TOPGRADE",
+        "title": "Free Diagnostic Test + $50 Tuition Credit",
+        "discount": "$50 Off",
+        "description": "Complimentary academic assessment + credit towards your first month enrollment."
+      }
+    ],
+    "seoKeywords": [
+      "math tutor near me",
+      "sat test prep downtown",
+      "stem classes for kids",
+      "best coaching center"
+    ],
+    "stats": {
+      "monthlyVisitors": 280,
+      "aiBookings": 33,
+      "revenueGenerated": 4190,
+      "dormantReactivated": 11
+    }
+  }
+]

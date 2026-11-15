@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LocalPulse AI - Autonomous Growth Engine for Local Businesses</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%20%22100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+</head>
+<body>
+  <!-- App Container -->
+  <div class="app-container">
+    
+    <!-- Top Navigation Header -->
+    <header class="top-nav">
+      <div class="brand">
+        <div class="brand-logo">⚡</div>
+        <div class="brand-text">
+          <h1>LocalPulse <span>AI</span></h1>
+          <p class="tagline">Autonomous Customer Growth & Booking Engine for Local Businesses</p>
+        </div>
+      </div>
+
+      <!-- Business Selector & Hackathon Mode -->
+      <div class="nav-controls">
+        <div class="selector-group">
+          <label for="businessSelect">🏢 Active Business:</label>
+          <select id="businessSelect">
+            <option value="biz_salon">💇 Luxe Glow Salon & Spa</option>
+            <option value="biz_gym">🏋️ IronForge Fitness & Strength</option>
+            <option value="biz_cafe">☕ Artisan Roast Cafe</option>
+            <option value="biz_clinic">🩺 Apex Dental & Wellness</option>
+            <option value="biz_tuition">📚 Apex Minds Tutoring</option>
+          </select>
+        </div>
+
+        <div class="trial-badge">
+          <span class="pulse-dot"></span>
+          <span>Free Trial Active (Day 18 of 30)</span>
+        </div>
+
+        <button id="btnDownloadProof" class="btn btn-primary proof-btn">
+          <span>📊</span> Generate ROI Proof Report
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Workspace: Split View -->
+    <main class="main-workspace">
+
+      <!-- LEFT COLUMN: Interactive WhatsApp Phone Simulator -->
+      <aside class="phone-column">
+        <div class="column-header">
+          <h3>📱 Live Customer Experience</h3>
+          <span class="subtext">Simulated WhatsApp Cloud API Chatbot</span>
+        </div>
+
+        <!-- Phone Mockup Container -->
+        <div class="phone-frame">
+          <div class="phone-speaker"></div>
+          
+          <!-- WhatsApp Chat Header -->
+          <div class="wa-header">
+            <div class="wa-back-btn">‹</div>
+            <div class="wa-avatar" id="waAvatar">💅</div>
+            <div class="wa-contact-info">
+              <div class="wa-name-row">
+                <span id="waBusinessName">Luxe Glow Salon</span>
+                <span class="wa-verified">✓</span>
+              </div>
+              <span class="wa-status" id="waStatus">online (AI Assistant)</span>
+            </div>
+            <div class="wa-icons">
+              <span title="Video Call">📹</span>
+              <span title="Voice Call">📞</span>
+              <span title="Menu">⋮</span>
+            </div>
+          </div>
+
+          <!-- WhatsApp Chat Body -->
+          <div class="wa-body" id="waChatBody">
+            <div class="wa-date-divider">
+              <span>TODAY</span>
+            </div>
+            <div class="wa-encryption-notice">
+              🔒 Messages are end-to-end encrypted. Powered by LocalPulse AI WhatsApp Gateway.
+            </div>
+            <!-- Messages stream here -->
+          </div>
+
+          <!-- Quick Suggestion Chips -->
+          <div class="wa-chips" id="waQuickChips">
+            <button class="chip" data-msg="Hi! What are your services and prices?">💅 Services & Rates</button>
+            <button class="chip" data-msg="I want to book an appointment tomorrow at 3 PM">📅 Book Slot</button>
+            <button class="chip" data-msg="Do you have any current discounts or offers?">🎁 Deals</button>
+            <button class="chip" data-msg="Where are you located and what are your hours?">📍 Location</button>
+          </div>
+
+          <!-- WhatsApp Input Area -->
+          <form class="wa-input-bar" id="waForm">
+            <button type="button" class="wa-icon-btn" title="Emoji">😊</button>
+            <button type="button" class="wa-icon-btn" title="Attach">📎</button>
+            <input type="text" id="waInput" placeholder="Type a message..." autocomplete="off">
+            <button type="submit" class="wa-send-btn" id="waSendBtn">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
+              </svg>
+            </button>
+          </form>
+        </div>
+
+        <div class="phone-caption">
+          💡 <em>Try saying: "Book a haircut for tomorrow at 4 PM" or click a chip above.</em>
+        </div>
+      </aside>
+
+      <!-- RIGHT COLUMN: Founder & Shop Owner SaaS Dashboard -->
+      <section class="dashboard-column">
+        
+        <!-- Navigation Tabs -->
+        <nav class="dash-tabs">
+          <button class="tab-btn active" data-tab="overview">
+            <span>📈</span> Pulse & ROI Overview
+          </button>
+          <button class="tab-btn" data-tab="bookings">
+            <span>📅</span> Live Appointments (<span id="bookingCountBadge">0</span>)
+          </button>
+          <button class="tab-btn" data-tab="seo">
+            <span>🔍</span> Get Found on AI & Google
+          </button>
+          <button class="tab-btn" data-tab="ads">
+            <span>📢</span> 1-Click Ads & Creatives
+          </button>
+          <button class="tab-btn" data-tab="winback">
+            <span>🔄</span> Customer Win-Back
+          </button>
+          <button class="tab-btn" data-tab="growth">
+            <span>💼</span> 5-Step Hackathon Playbook
+          </button>
+        </nav>
+
+        <!-- Tab 1: Pulse & ROI Overview -->
+        <div class="tab-content active" id="tab-overview">
+          <!-- KPI Stats Grid -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon-wrapper blue">📅</div>
+              <div class="stat-info">
+                <span class="stat-label">AI Bookings (30 Days)</span>
+                <h3 class="stat-value" id="statBookings">38</h3>
+                <span class="stat-trend positive">↑ +31% vs manual booking</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon-wrapper green">💵</div>
+              <div class="stat-info">
+                <span class="stat-label">Estimated Revenue Added</span>
+                <h3 class="stat-value" id="statRevenue">$2,480</h3>
+                <span class="stat-trend positive">Verified via completed slots</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon-wrapper purple">⚡</div>
+              <div class="stat-info">
+                <span class="stat-label">Avg. Response Time</span>
+                <h3 class="stat-value">1.4s</h3>
+                <span class="stat-trend">24/7 Zero Missed Inquiries</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon-wrapper orange">🔄</div>
+              <div class="stat-info">
+                <span class="stat-label">Dormant Clients Reactivated</span>
+                <h3 class="stat-value" id="statReactivated">14</h3>
+                <span class="stat-trend positive">Recovered $680 in lost revenue</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Value Proposition Pitch Box -->
+          <div class="roi-banner">
+            <div class="roi-banner-text">
+              <h4>🎯 Step 3 Proof: "You Got 38 New Customers This Month"</h4>
+              <p>During the 30-day free trial, LocalPulse AI captured customer inquiries at night and weekends when staff was busy. The business owner gained <strong>$2,480 in revenue</strong> for $0 upfront cost.</p>
+            </div>
+            <div class="roi-banner-actions">
+              <button class="btn btn-secondary" id="btnPreviewPitch">View 1-Page Pitch Card</button>
+            </div>
+          </div>
+
+          <!-- Recent Activity & Quick Booking -->
+          <div class="dash-row">
+            <div class="dash-card flex-2">
+              <div class="card-header">
+                <h4>Recent Appointments Booked via AI</h4>
+                <a href="#" class="view-all-link" id="linkViewAllBookings">View All →</a>
+              </div>
+              <div class="table-container">
+                <table class="data-table" id="recentBookingsTable">
+                  <thead>
+                    <tr>
+                      <th>Customer</th>
+                      <th>Service</th>
+                      <th>Date & Time</th>
+                      <th>Value</th>
+                      <th>Source</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="recentBookingsTbody">
+                    <!-- Populated via JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="dash-card flex-1">
+              <div class="card-header">
+                <h4>⚡ Quick Manual Booking</h4>
+              </div>
+              <form id="quickBookingForm" class="quick-form">
+                <div class="form-group">
+                  <label>Customer Name</label>
+                  <input type="text" id="qbName" placeholder="e.g. Michael Scott" required>
+                </div>
+                <div class="form-group">
+                  <label>Phone Number</label>
+                  <input type="text" id="qbPhone" placeholder="+1 (555) 000-0000" required>
+                </div>
+                <div class="form-group">
+                  <label>Service</label>
+                  <select id="qbService"></select>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Date</label>
+                    <input type="text" id="qbDate" value="Tomorrow">
+                  </div>
+                  <div class="form-group">
+                    <label>Time</label>
+                    <input type="text" id="qbTime" value="14:00">
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-primary full-width">Add Appointment</button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Live Appointments Manager -->
+        <div class="tab-content" id="tab-bookings">
+          <div class="dash-card">
+            <div class="card-header filter-header">
+              <div>
+                <h4>All Scheduled Appointments</h4>
+                <p class="card-sub">Real-time sync across WhatsApp, Google Search, and walk-in leads</p>
+              </div>
+              <div class="filter-actions">
+                <input type="text" id="searchBookings" placeholder="Search customer, service..." class="search-input">
+              </div>
+            </div>
+
+            <div class="table-container">
+              <table class="data-table" id="allBookingsTable">
+                <thead>
+                  <tr>
+                    <th>Ref #</th>
+                    <th>Customer Name</th>
+                    <th>Phone</th>
+                    <th>Service</th>
+                    <th>Slot</th>
+                    <th>Price</th>
+                    <th>Acquisition Channel</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="allBookingsTbody">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 3: Get Found on AI & Google (GEO / Local SEO) -->
+        <div class="tab-content" id="tab-seo">
+          <div class="dash-card">
+            <div class="card-header">
+              <div>
+                <h4>🌐 Get Found on AI & Google Engine</h4>
+                <p class="card-sub">How to make this local business show up when customers ask "Best salon near me?"</p>
+              </div>
+              <span class="badge badge-success">Audit Score: 88/100 (A-)</span>
+            </div>
+
+            <div class="seo-audit-grid">
+              <!-- Checklist -->
+              <div class="seo-col">
+                <h5>Local Search Optimization Checklist</h5>
+                <div class="audit-list" id="seoChecklist">
+                  <!-- Rendered via JS -->
+                </div>
+
+                <div class="keyword-tags-box">
+                  <h5>High-Intent Ranking Keywords</h5>
+                  <div class="keyword-tags" id="seoKeywords">
+                    <!-- Populated via JS -->
+                  </div>
+                </div>
+              </div>
+
+              <!-- AI Engine Simulation & Schema -->
+              <div class="seo-col">
+                <h5>Generative Engine Optimization (GEO) Preview</h5>
+                <div class="ai-preview-bubble">
+                  <div class="ai-preview-header">
+                    <span class="ai-pill">ChatGPT / Perplexity / Gemini Answer</span>
+                    <span class="query-pill">Q: "Best salon near me"</span>
+                  </div>
+                  <p id="geoSimulationText" class="ai-preview-content">
+                    "Based on top customer reviews and instant WhatsApp availability, <strong>Luxe Glow Salon & Spa</strong> is the top-rated choice in downtown..."
+                  </p>
+                </div>
+
+                <div class="schema-code-box">
+                  <div class="schema-header">
+                    <span>Generated Schema.org LocalBusiness JSON-LD</span>
+                    <button class="btn btn-sm btn-outline" id="btnCopySchema">Copy Code</button>
+                  </div>
+                  <pre id="schemaCodeBlock"><code>Loading Schema markup...</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 4: 1-Click Ads & Social Creatives -->
+        <div class="tab-content" id="tab-ads">
+          <div class="dash-card">
+            <div class="card-header">
+              <div>
+                <h4>📢 Simple Ads Generator</h4>
+                <p class="card-sub">Run Instagram, Facebook & Google Ads with zero marketing knowledge</p>
+              </div>
+              <button class="btn btn-primary" id="btnRegenerateAds">⚡ Regenerate New Angles</button>
+            </div>
+
+            <div class="audience-card" id="adAudienceCard">
+              <!-- Populated via JS -->
+            </div>
+
+            <div class="ad-variants-grid" id="adVariantsContainer">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 5: Customer Win-Back & Follow-ups -->
+        <div class="tab-content" id="tab-winback">
+          <div class="dash-card">
+            <div class="card-header">
+              <div>
+                <h4>🔄 Automated Customer Follow-Up & Win-Back</h4>
+                <p class="card-sub">Step 2 Feature: Automatically message old customers with offers so they return</p>
+              </div>
+              <button class="btn btn-success" id="btnLaunchWinback">
+                🚀 Launch WhatsApp Win-Back Broadcast
+              </button>
+            </div>
+
+            <div class="winback-summary" id="winbackMetrics">
+              <!-- Populated via JS -->
+            </div>
+
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Customer Name</th>
+                    <th>Phone</th>
+                    <th>Days Inactive</th>
+                    <th>Last Preferred Service</th>
+                    <th>Status</th>
+                    <th>AI Personalized Offer Message</th>
+                  </tr>
+                </thead>
+                <tbody id="winbackCustomersTbody">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 6: 5-Step Hackathon Playbook & Pitch Deck -->
+        <div class="tab-content" id="tab-growth">
+          <div class="dash-card">
+            <div class="card-header">
+              <div>
+                <h4>🏆 Hackathon Submission & Go-To-Market Masterplan</h4>
+                <p class="card-sub">A battle-tested blueprint to execute all 5 steps of the hackathon prompt</p>
+              </div>
+            </div>
+
+            <div class="playbook-steps-grid">
+              <div class="step-card">
+                <div class="step-num">Step 1</div>
+                <h5>Pick Small Local Businesses</h5>
+                <p>Focus on high-margin, appointment-dependent niches: salons, dental clinics, boutique gyms, cafes, and tuition centers.</p>
+                <div class="step-badge">Status: 5 Presets Pre-Built</div>
+              </div>
+
+              <div class="step-card">
+                <div class="step-num">Step 2</div>
+                <h5>Offer 1 Simple Service</h5>
+                <p>Deploy the 24/7 WhatsApp AI concierge. It takes 5 minutes to connect, answers questions, takes bookings, and sends offers.</p>
+                <div class="step-badge">Status: Live Simulator Ready</div>
+              </div>
+
+              <div class="step-card">
+                <div class="step-num">Step 3</div>
+                <h5>Get 5 Businesses on 30-Day Free Trial</h5>
+                <p>Walk in or DM local business owners: <em>"We will install an AI WhatsApp booking assistant for free. If you don't get at least 25 new customers, you pay zero."</em></p>
+                <div class="step-badge">Status: 1-Page Proof Generator Ready</div>
+              </div>
+
+              <div class="step-card">
+                <div class="step-num">Step 4</div>
+                <h5>Charge Money & Monetize</h5>
+                <p>Transition to <strong>$79 - $149/month flat SaaS fee</strong> or <strong>$2 per completed appointment</strong>. When they see $2,000+ added revenue, it's a no-brainer.</p>
+                <div class="step-badge">Status: Pricing Model Calculated</div>
+              </div>
+
+              <div class="step-card">
+                <div class="step-num">Step 5</div>
+                <h5>Scale to 20+ Businesses & AI Partners</h5>
+                <p>Package the case studies into a white-label agency platform. Partner with Meta BSPs, local chambers of commerce, and AI aggregators.</p>
+                <div class="step-badge">Status: Multi-tenant Architecture Ready</div>
+              </div>
+            </div>
+
+            <!-- Pitch Script Box -->
+            <div class="pitch-deck-box">
+              <h4>🎤 3-Minute Hackathon Winning Pitch Script</h4>
+              <div class="pitch-content">
+                <p><strong>[Hook - 30s]:</strong> "Every local salon, cafe, and clinic in your neighborhood is losing thousands of dollars every month. Why? Because when a customer searches for a service on Instagram or Google at 9 PM and clicks their WhatsApp button, nobody answers for 12 hours. By morning, that customer booked with someone else."</p>
+                <p><strong>[Solution - 60s]:</strong> "We built <strong>LocalPulse AI</strong>: an autonomous growth engine that turns local WhatsApp numbers into 24/7 revenue machines. It answers customer questions in 1.4 seconds, books slots directly into their calendar, automatically optimizes their Google & AI search ranking, and messages dormant customers to win them back."</p>
+                <p><strong>[Traction & Business Model - 60s]:</strong> "Our GTM is frictionless: we offer a 30-day risk-free trial. At the end of the month, our Proof Engine shows the owner: 'You got 38 new bookings and $2,480 in revenue.' We charge just $79/month or $2/booking. With just 20 local stores, that's $2,000/month in recurring software revenue."</p>
+                <p><strong>[Vision - 30s]:</strong> "Small business owners don't want complex dashboards—they want more customers walking through the front door. LocalPulse AI delivers that on autopilot."</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+    </main>
+  </div>
+
+  <!-- Modal: Proof of Results Report (Printable / Shareable) -->
+  <div class="modal-backdrop" id="proofModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>📄 Monthly Client ROI & Proof Report</h3>
+        <button class="modal-close-btn" id="btnCloseModal">✕</button>
+      </div>
+      <div class="modal-body" id="proofModalContent">
+        <!-- Filled via JS -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="btnPrintModal">🖨️ Print / Save as PDF</button>
+        <button class="btn btn-primary" id="btnCopyPitchText">📋 Copy Summary for WhatsApp</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Toast -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

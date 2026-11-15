@@ -1,0 +1,22 @@
+{
+  "name": "localpulse-ai",
+  "version": "1.0.0",
+  "description": "Autonomous AI Growth Engine for Local Businesses - WhatsApp Assistant, GEO/SEO, Ads & Follow-up",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "node test.js"
+  },
+  "keywords": [
+    "local-business",
+    "whatsapp-assistant",
+    "ai-agent",
+    "lead-generation",
+    "hackathon",
+    "geo-seo",
+    "appointment-booking"
+  ],
+  "author": "LocalPulse AI Team",
+  "license": "MIT"
+}
