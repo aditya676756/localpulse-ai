@@ -1,33 +1,32 @@
-# ⚡ LocalPulse AI — Autonomous Growth Engine for Local Businesses
+# ⚡ BLUESOUL MANAGEMENTS — Autonomous AI Client Growth & WhatsApp Operations OS
 
-> **Hackathon Submission Project**  
-> *"Help small local businesses get more customers using AI."*
+> **The Enterprise AI Operations & Autonomous WhatsApp Gateway for Local Businesses**
 
 [![Node.js](https://img.shields.io/badge/Node.js-v18%2B-green.svg)](https://nodejs.org/)
 [![Zero Dependencies](https://img.shields.io/badge/Dependencies-0%20(Pure%20Node.js)-blue.svg)]()
+[![Meta WhatsApp API](https://img.shields.io/badge/Meta%20Cloud%20API-v19.0-green.svg)]()
 [![License](https://img.shields.io/badge/License-MIT-purple.svg)]()
-[![Status](https://img.shields.io/badge/Hackathon-Production%20Ready-gold.svg)]()
 
 ---
 
-## 📌 Executive Summary
+## 📌 Platform Overview
 
-Local salons, gyms, cafes, clinics, and tuition centers lose **30% to 40% of customer inquiries** simply because they cannot reply instantly 24/7 or don't know how to run modern AI ads.
+**BLUESOUL MANAGEMENTS** transforms local businesses (salons, clinics, gyms, cafes, academies) into 24/7 autonomous booking and customer acquisition operations directly through their WhatsApp number:
 
-**LocalPulse AI** is an all-in-one autonomous growth and booking platform that turns any small business's WhatsApp into a 24/7 revenue-generating machine:
-1. **🤖 WhatsApp AI Concierge:** Answers customer questions in under 1.5 seconds, quotes prices, and books appointments with confirmed tickets.
-2. **🔍 AI & Google SEO Engine:** Generates Schema.org JSON-LD and Generative Engine Optimization (GEO) keywords so businesses rank #1 when customers ask AI *"best salon near me"*.
-3. **📢 1-Click Ads Generator:** Creates ready-to-run Instagram & Facebook ad copy and audience parameters tailored to their local radius.
-4. **🔄 Dormant Win-Back Engine:** Automatically detects inactive customers (>30 days) and drafts personalized WhatsApp discount offers.
-5. **📊 The Proof Hub:** Generates a 1-page ROI proof report showing: *"In 30 days: 38 new bookings, $2,480 added revenue"* to convert free trials into paying $79/mo retainers.
+1. **🤖 24/7 AI WhatsApp Concierge:** Instant responses (< 1.5s), natural language appointment scheduling, price quoting, and real confirmed tickets.
+2. **🔌 Official Meta WhatsApp Cloud API Gateway:** Direct webhook architecture (`/api/webhook`) supporting real incoming customer texts and outbound replies via Meta's Graph API.
+3. **🔍 Generative Engine Optimization (GEO) & Local SEO:** Automatically creates Schema.org `LocalBusiness` JSON-LD and keyword positioning for ChatGPT, Perplexity, and Google.
+4. **📢 1-Click Ads & Social Creative Studio:** Generates targeted Instagram Stories, Reels, and Google Search campaigns tailored to local demographics.
+5. **🔄 Customer Win-Back Broadcasts:** Identifies customers inactive for >30 days and dispatches AI-personalized WhatsApp re-engagement offers.
+6. **📊 Client ROI & Operations Dashboard:** Real-time booking calendar, CRM records, and automated performance reports.
 
 ---
 
-## 🚀 Quick Start (Runs in Under 5 Seconds!)
+## 🚀 Quick Start
 
-LocalPulse AI is built with **zero external npm dependencies**. No long downloads or install errors.
+Built with zero external npm dependencies for instant startup and resilience:
 
-### 1. Start the Server
+### 1. Launch the Server
 ```bash
 node server.js
 ```
@@ -37,64 +36,46 @@ npm start
 ```
 
 ### 2. Open in Your Browser
-Open: [http://localhost:3000](http://localhost:3000)
+Open: **`http://localhost:3000`**
 
-### 3. Run Test Suite
+### 3. Run Test Suite (11/11 Passed)
 ```bash
 npm test
 ```
 
 ---
 
-## 🌟 How the 5-Step Hackathon Roadmap is Implemented
+## 📱 Real Meta WhatsApp Cloud API Setup
 
-| Step | User Request Step | Built-in LocalPulse AI Feature |
-|---|---|---|
-| **Step 1** | **Pick small local businesses** | 5 pre-configured presets built into the top navigation: **Luxe Glow Salon**, **IronForge Gym**, **Artisan Roast Cafe**, **Apex Dental Clinic**, and **Apex Tutoring**. |
-| **Step 2** | **Offer 1 simple service** | **Simulated WhatsApp AI Assistant** with real-time slot booking, live audio notifications, and verified ticket generation. Plus 1-click SEO, Ads, and Win-back tools. |
-| **Step 3** | **Get 5 businesses on 30-day trial & show proof** | **"The Proof Generator" Modal**: 1-click generation of a printable 30-day performance report proving 38 bookings and $2,480 in added client revenue. |
-| **Step 4** | **Charge money ($79/mo or $2/booking)** | Built-in ROI economics breakdown proving that 2 bookings cover the software fee (3,600% ROI). |
-| **Step 5** | **Grow & scale to 20+ businesses** | Multi-tenant architecture, white-label agency mode, and Meta WhatsApp Cloud API webhook endpoint (`/api/webhook`). |
+To connect a real physical WhatsApp Business number:
+
+1. Go to [developers.facebook.com](https://developers.facebook.com) and create a **Business App**.
+2. Add the **WhatsApp** product.
+3. Copy your **Phone Number ID** and **Access Token**.
+4. In **Bluesoul Dashboard** > **Live WhatsApp API Setup** tab, paste your credentials and click **Save**.
+5. In Meta Developer Dashboard > **WhatsApp** > **Configuration**, set:
+   - **Callback URL:** `https://your-domain.com/api/webhook`
+   - **Verify Token:** `bluesoul_verify_token`
+   - **Webhook Fields:** Subscribe to `messages`.
 
 ---
 
 ## 📁 Repository Structure
 
 ```
-localpulse-ai/
-├── server.js               # Zero-dependency Node.js HTTP/REST API server & webhook handler
-├── package.json            # Scripts & metadata (npm start, npm test)
-├── test.js                 # Automated API and reasoning test suite
+bluesoul-managements/
+├── server.js               # Zero-dependency HTTP server, Meta WhatsApp Gateway & REST APIs
+├── package.json            # Scripts & metadata
+├── test.js                 # 11-stage automated API and webhook test suite
 ├── data/
-│   ├── businesses.json     # 5 Local business niche catalogs (Salon, Gym, Cafe, Clinic, Tuition)
-│   ├── bookings.json       # Live booking records with customer info and status
-│   └── customers.json      # CRM database with inactivity and dormancy tracking
+│   ├── businesses.json     # Client presets (Salon, Gym, Cafe, Clinic, Tuition)
+│   ├── bookings.json       # Live booking records and appointment calendar
+│   └── customers.json      # CRM customer database with dormancy tracking
 ├── public/
-│   ├── index.html          # Split-view UI: WhatsApp Phone Simulator + Founder SaaS OS
-│   ├── style.css           # Glassmorphic dark slate theme with authentic WhatsApp UI
-│   └── app.js              # State management, Web Audio synthesizer, live updates
+│   ├── index.html          # Split-view UI: Assistant simulator & Operations OS
+│   ├── style.css           # Glassmorphic dark slate UI & WhatsApp chat styles
+│   └── app.js              # State manager, audio synthesizer, Meta dispatcher
 └── docs/
-    ├── HACKATHON_PITCH.md  # 3-minute pitch script + 10-slide deck outline + Judge Q&A
-    ├── GTM_PLAYBOOK.md     # 7-day field playbook: walk-in scripts to sign 5 pilots
-    ├── WHATSAPP_API_SETUP.md # Meta Cloud API & Twilio webhook configuration guide
-    └── ARCHITECTURE.md     # Technical deep dive into NLU, GEO, and Schema engine
+    ├── WHATSAPP_API_SETUP.md # Step-by-step Meta Cloud API & Twilio setup guide
+    └── ARCHITECTURE.md     # System architecture, NLU pipeline, and GEO strategy
 ```
-
----
-
-## 🧪 Live Demo Walkthrough for Judges
-
-1. **Test the WhatsApp Assistant:**
-   - Look at the simulated smartphone on the left.
-   - Click the chip: *"💅 Services & Rates"* or type: *"Book a haircut tomorrow at 3 PM"*.
-   - Watch the AI issue a confirmed booking ticket with reference code.
-   - Look at the **Pulse Overview** dashboard on the right: total bookings and revenue update in real-time!
-2. **Switch Business Niches:**
-   - Use the top dropdown to switch to **IronForge Gym** or **Artisan Roast Cafe**.
-   - Watch the WhatsApp bot automatically re-adapt its services, prices, avatar, and FAQs!
-3. **Inspect the Local SEO & GEO Engine:**
-   - Click the **"Get Found on AI & Google"** tab.
-   - View the Schema.org JSON-LD markup and simulated ChatGPT/Gemini local recommendation answer.
-4. **Generate the Proof Report (The Closer):**
-   - Click **"Generate ROI Proof Report"** in the top navigation.
-   - View the 1-page financial breakdown designed to convert free trial owners into paying clients!

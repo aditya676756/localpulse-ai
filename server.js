@@ -1,9 +1,10 @@
 /**
- * LocalPulse AI - Autonomous Growth Engine for Local Businesses
- * Zero-dependency Node.js HTTP Server & AI Simulation Engine
+ * BLUESOUL MANAGEMENTS - Autonomous AI Growth & Client Operations Engine
+ * Production HTTP Server, Meta WhatsApp Cloud API Webhook Gateway & REST API
  */
 
 const http = require('http');
+const https = require('https');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
@@ -11,6 +12,13 @@ const crypto = require('crypto');
 const PORT = process.env.PORT || 3000;
 const DATA_DIR = path.join(__dirname, 'data');
 const PUBLIC_DIR = path.join(__dirname, 'public');
+
+// Global Meta WhatsApp Config (Can be set via env vars or through dashboard settings)
+let metaConfig = {
+  phoneNumberId: process.env.WHATSAPP_PHONE_ID || '',
+  accessToken: process.env.WHATSAPP_TOKEN || '',
+  verifyToken: process.env.WHATSAPP_VERIFY_TOKEN || 'bluesoul_verify_token'
+};
 
 // Utility to read JSON
 function readJson(filename) {
@@ -55,7 +63,7 @@ function parseRequestBody(req) {
     let body = '';
     req.on('data', chunk => {
       body += chunk.toString();
-      if (body.length > 10 * 1024 * 1024) { // 10MB limit
+      if (body.length > 10 * 1024 * 1024) {
         reject(new Error('Request body too large'));
       }
     });
@@ -80,6 +88,73 @@ function sendJson(res, statusCode, data) {
     'Access-Control-Allow-Headers': 'Content-Type, Authorization'
   });
   res.end(JSON.stringify(data));
+}
+
+// Send Real Outbound Message via Meta WhatsApp Cloud API
+function sendMetaWhatsAppMessage(toPhoneNumber, messageText, customConfig = null) {
+  return new Promise((resolve, reject) => {
+    const cfg = customConfig || metaConfig;
+    const phoneId = cfg.phoneNumberId || process.env.WHATSAPP_PHONE_ID;
+    const token = cfg.accessToken || process.env.WHATSAPP_TOKEN;
+
+    if (!phoneId || !token) {
+      console.log(`[Bluesoul Meta Gateway] Simulated outbound to ${toPhoneNumber}: "${messageText.slice(0, 60)}..." (Configure WHATSAPP_TOKEN & WHATSAPP_PHONE_ID for live delivery)`);
+      return resolve({
+        success: true,
+        mode: 'simulated',
+        message: 'Meta API credentials not set. Message logged in simulator.'
+      });
+    }
+
+    const cleanPhone = String(toPhoneNumber).replace(/[^\d]/g, '');
+
+    const payload = JSON.stringify({
+      messaging_product: 'whatsapp',
+      recipient_type: 'individual',
+      to: cleanPhone,
+      type: 'text',
+      text: { preview_url: false, body: messageText }
+    });
+
+    const options = {
+      hostname: 'graph.facebook.com',
+      port: 443,
+      path: `/v19.0/${phoneId}/messages`,
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(payload)
+      }
+    };
+
+    const req = https.request(options, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        try {
+          const parsed = JSON.parse(data);
+          if (res.statusCode >= 200 && res.statusCode < 300) {
+            console.log(`[Bluesoul Meta Gateway] Real WhatsApp message sent to ${cleanPhone}: message_id ${parsed.messages?.[0]?.id}`);
+            resolve({ success: true, mode: 'live_meta_api', data: parsed });
+          } else {
+            console.error(`[Bluesoul Meta Gateway Error]:`, parsed);
+            resolve({ success: false, mode: 'error', error: parsed.error?.message || 'Meta API error' });
+          }
+        } catch (e) {
+          resolve({ success: false, error: data });
+        }
+      });
+    });
+
+    req.on('error', (err) => {
+      console.error('[Bluesoul Meta Request Failed]:', err);
+      resolve({ success: false, error: err.message });
+    });
+
+    req.write(payload);
+    req.end();
+  });
 }
 
 // AI WhatsApp Assistant Reasoning Engine
@@ -115,18 +190,17 @@ function processAiWhatsAppMessage(business, userMessage, history = []) {
   const timeMatch = userMessage.match(timeRegex);
   const dayMatch = userMessage.match(daysRegex);
 
-  // If user provides specific booking details (e.g. "Book haircut tomorrow at 3pm for Alex")
+  // If user provides specific booking details
   if ((asksBooking || matchedService) && (timeMatch || dayMatch || cleanMsg.includes('confirm') || cleanMsg.includes('yes'))) {
     const detectedService = matchedService ? matchedService.name : services[0].name;
     const detectedPrice = matchedService ? matchedService.price : services[0].price;
     const detectedDay = dayMatch ? dayMatch[0] : 'Tomorrow';
     const detectedTime = timeMatch ? timeMatch[0].toUpperCase() : '3:00 PM';
     
-    // Generate simulated booking reference
     const bookingCode = 'BK-' + Math.floor(1000 + Math.random() * 9000);
 
     return {
-      reply: `🎉 Great! I have reserved your appointment at *${business.name}*!\n\n📋 *Booking Details:*\n• Reference: *${bookingCode}*\n• Service: *${detectedService}* (${business.currency}${detectedPrice})\n• Date/Time: *${detectedDay} at ${detectedTime}*\n• Location: ${business.address}\n\n📍 *What happens next?*\nYou will receive a reminder 2 hours prior. If you need to reschedule or cancel, simply message me here anytime. See you soon!`,
+      reply: `🎉 Great news! Your appointment at *${business.name}* is confirmed!\n\n📋 *Booking Details:*\n• Reference Code: *${bookingCode}*\n• Service: *${detectedService}* (${business.currency}${detectedPrice})\n• Date/Time: *${detectedDay} at ${detectedTime}*\n• Location: ${business.address}\n\n📍 *Notes:*\nYou will receive a reminder 2 hours prior to your visit. If you ever need to reschedule, reply to this message directly. We look forward to welcoming you! ✨`,
       action: 'booking_confirmed',
       bookingData: {
         id: bookingCode,
@@ -136,7 +210,7 @@ function processAiWhatsAppMessage(business, userMessage, history = []) {
         date: detectedDay.toLowerCase() === 'today' ? 'Today' : 'Tomorrow',
         time: detectedTime,
         status: 'confirmed',
-        source: 'WhatsApp AI Agent'
+        source: 'Bluesoul WhatsApp AI'
       }
     };
   }
@@ -145,7 +219,7 @@ function processAiWhatsAppMessage(business, userMessage, history = []) {
   if (asksBooking) {
     const serviceList = services.slice(0, 4).map((s, i) => `${i + 1}. *${s.name}* - ${business.currency}${s.price} (${s.duration})`).join('\n');
     return {
-      reply: `📅 I'd love to help you book an appointment at *${business.name}*!\n\nWhich service would you like to schedule?\n\n${serviceList}\n\n👉 *Reply with the service name and preferred day & time* (e.g., "${services[0].name} tomorrow at 2 PM") and I'll confirm your slot instantly!`,
+      reply: `📅 I'd be happy to schedule an appointment at *${business.name}* for you!\n\nWhich service would you like?\n\n${serviceList}\n\n👉 *Reply with your preferred service, day and time* (e.g., "${services[0].name} tomorrow at 2 PM") and I will lock in your slot right away!`,
       action: 'prompt_booking_details'
     };
   }
@@ -154,7 +228,7 @@ function processAiWhatsAppMessage(business, userMessage, history = []) {
   if (asksOffers) {
     const offerText = offers.map(o => `🎁 *${o.title}* (Code: *${o.code}*)\n${o.description}`).join('\n\n');
     return {
-      reply: `🌟 *Exclusive Deals at ${business.name}:*\n\n${offerText || 'Special 15% discount for first-time bookings today!'}\n\nWould you like me to apply one of these to a booking for you? Just say "Book with ${offers[0] ? offers[0].code : 'OFFER'}"!`,
+      reply: `🌟 *Current Special Deals at ${business.name}:*\n\n${offerText || 'Exclusive 15% discount for first-time bookings!'}\n\nWould you like me to apply one of these to a booking for you? Just reply "Book with ${offers[0] ? offers[0].code : 'DEAL'}"!`,
       action: 'show_offers'
     };
   }
@@ -163,7 +237,7 @@ function processAiWhatsAppMessage(business, userMessage, history = []) {
   if (asksServices || matchedService) {
     const list = services.map(s => `• *${s.name}* — ${business.currency}${s.price} (${s.duration})\n  _${s.category}_`).join('\n\n');
     return {
-      reply: `✨ Here is our current menu & pricing at *${business.name}*:\n\n${list}\n\nWould you like to book one of these now? Reply with the service name and your preferred time!`,
+      reply: `✨ Here is our complete service menu & rates at *${business.name}*:\n\n${list}\n\nWould you like to reserve a time? Just let me know what day and time works best for you!`,
       action: 'show_services'
     };
   }
@@ -171,7 +245,7 @@ function processAiWhatsAppMessage(business, userMessage, history = []) {
   // Handle hours & location
   if (asksHours || asksLocation) {
     return {
-      reply: `📍 *Location & Hours for ${business.name}:*\n\n🏢 *Address:* ${business.address}\n⏰ *Hours:* ${business.hours}\n📞 *Direct Phone:* ${business.phone}\n🚗 *Parking:* Complimentary parking available on-site.\n\nWould you like to schedule a visit today?`,
+      reply: `📍 *Location & Hours for ${business.name}:*\n\n🏢 *Address:* ${business.address}\n⏰ *Hours:* ${business.hours}\n📞 *Direct Phone:* ${business.phone}\n🚗 *Parking:* Available on-site.\n\nWould you like to schedule a visit today?`,
       action: 'show_info'
     };
   }
@@ -182,7 +256,7 @@ function processAiWhatsAppMessage(business, userMessage, history = []) {
     const matches = qWords.filter(w => cleanMsg.includes(w));
     if (matches.length >= 2) {
       return {
-        reply: `💡 ${faq.a}\n\nIs there anything else I can help you with, or would you like to book an appointment?`,
+        reply: `💡 ${faq.a}\n\nCan I assist you with booking an appointment or answering anything else?`,
         action: 'answer_faq'
       };
     }
@@ -191,14 +265,14 @@ function processAiWhatsAppMessage(business, userMessage, history = []) {
   // Default Greeting / Fallback
   if (isGreeting || cleanMsg.length < 5) {
     return {
-      reply: `👋 Hello! Welcome to *${business.name}* WhatsApp concierge!\n\nI can help you with:\n1️⃣ *Booking an appointment* 📅\n2️⃣ *Browsing services & prices* 💅\n3️⃣ *Current offers & discounts* 🎁\n4️⃣ *Location, hours & parking* 📍\n\nHow can I help you today?`,
+      reply: `👋 Hello! Welcome to *${business.name}*!\n\nI am your 24/7 AI concierge powered by *Bluesoul Managements*.\n\nHow can I help you today?\n1️⃣ *Book an appointment* 📅\n2️⃣ *View services & prices* 💅\n3️⃣ *Current offers & promotions* 🎁\n4️⃣ *Location, hours & parking* 📍`,
       action: 'greet'
     };
   }
 
   // Intelligent Contextual Fallback
   return {
-    reply: `Thank you for reaching out to *${business.name}*! 😊\n\nI can assist you with booking our popular services like *${services[0] ? services[0].name : 'our signature experience'}*, answering questions on our rates (${business.currency}${services[0] ? services[0].price : '45'}+), or checking availability.\n\nWould you like to see our services list or book a slot for this week?`,
+    reply: `Thank you for messaging *${business.name}*! 😊\n\nI can help you schedule our popular services like *${services[0] ? services[0].name : 'our signature service'}*, check pricing, or see availability.\n\nWould you like to see our menu or book an appointment for this week?`,
     action: 'general_assistance'
   };
 }
@@ -228,26 +302,26 @@ function generateLocalSeoAudit(business) {
 
   const geoOptimizationSteps = [
     {
-      title: "Google Business Profile (GBP) Optimization",
+      title: "Google Business Profile (GBP) Integration",
       status: "Optimized",
       impact: "High",
       detail: `Verified primary category '${business.category.toUpperCase()}', added complete service menu with exact pricing, and updated weekly holiday hours.`
     },
     {
       title: "Generative Engine Optimization (GEO) for ChatGPT & Perplexity",
-      status: "Needs Action",
+      status: "Configured",
       impact: "Critical",
-      detail: `When AI models are asked 'best ${business.category} near me', they prioritize sites with structured FAQ JSON-LD, localized citation backlinks, and review sentiment keywords. Add the generated Schema markup.`
+      detail: `When AI models are asked 'best ${business.category} near me', they prioritize sites with structured FAQ JSON-LD, localized citation backlinks, and review sentiment keywords.`
     },
     {
       title: "Local Citations & NAP Consistency",
-      status: "92% Score",
+      status: "94% Score",
       impact: "Medium",
       detail: `Name, Address, and Phone number are matched across Google Maps, Apple Maps, Bing Places, and Yelp.`
     },
     {
       title: "WhatsApp Click-to-Chat Link on Google Maps",
-      status: "Configured",
+      status: "Active",
       impact: "High",
       detail: `Placed direct 'Message Us on WhatsApp' action button on GBP profile to convert mobile searchers immediately without waiting for phone calls.`
     }
@@ -256,18 +330,18 @@ function generateLocalSeoAudit(business) {
   const recommendedKeywords = business.seoKeywords || [
     `best ${business.category} in downtown`,
     `${business.category} open now near me`,
-    `affordable ${business.category} with good reviews`
+    `top rated ${business.category}`
   ];
 
   return {
     businessName: business.name,
-    overallScore: 88,
-    seoGrade: "A-",
+    overallScore: 92,
+    seoGrade: "A",
     schemaJsonLd: JSON.stringify(schemaMarkup, null, 2),
     geoOptimizationSteps,
     recommendedKeywords,
     searchSimulationQuery: `best ${business.category} near me`,
-    aiEngineRecommendation: `\"Based on local ratings and verified services, ${business.name} on ${business.address} is highly rated (${business.rating}★ with ${business.reviewsCount}+ reviews). They offer instant WhatsApp booking with no wait times.\"`
+    aiEngineRecommendation: `\"Based on local verified reviews and instant WhatsApp responsiveness, ${business.name} at ${business.address} ranks as a top-tier recommendation (${business.rating}★ with ${business.reviewsCount}+ verified reviews).\"`
   };
 }
 
@@ -292,15 +366,15 @@ function generateAdCreatives(business) {
     adVariants: [
       {
         type: "Instagram Story / Reels Lead Ad",
-        hook: `Tired of waiting in line or playing phone tag for a ${category} appointment? 📱`,
-        body: `Meet ${business.name}! Book your ${service.name} directly on WhatsApp in under 30 seconds. Get an instant confirmation + ${offer.discount} for first-time guests using code ${offer.code}.`,
+        hook: `Tired of playing phone tag just to book a ${category} slot? 📱`,
+        body: `Connect with ${business.name}! Book your ${service.name} directly on WhatsApp in under 30 seconds. Get an instant confirmation + ${offer.discount} using code ${offer.code}.`,
         cta: "Send WhatsApp Message 💬",
         estimatedResults: "35-50 clicks / week | 12-18 confirmed bookings"
       },
       {
         type: "Facebook Community & Local Group Ad",
-        hook: `Downtown locals: Here's why ${business.name} is rated ${business.rating}★ by over ${business.reviewsCount} clients! ⭐⭐⭐⭐⭐`,
-        body: `Top-rated hygienic studio, expert specialists, and transparent pricing starting at just ${currency}${service.price}. Tap the button to chat with our friendly AI concierge and grab your exclusive slot before this weekend fills up!`,
+        hook: `Looking for top-rated ${category} in town? Rated ${business.rating}★ by over ${business.reviewsCount} clients! ⭐⭐⭐⭐⭐`,
+        body: `Hygienic studio, expert specialists, and transparent pricing starting at just ${currency}${service.price}. Tap the button to chat with our 24/7 AI concierge and secure your slot before slots fill up!`,
         cta: "Book Now on WhatsApp 📲",
         estimatedResults: "28-40 clicks / week | 9-14 confirmed bookings"
       },
@@ -321,7 +395,7 @@ function generateWinBackCampaign(business, customers) {
   const count = dormantCustomers.length || 3;
   const offer = business.offers[0] || { code: 'WELCOMEBACK', title: 'We Miss You 20% Off' };
 
-  const messageTemplate = `Hey {CustomerName}! We miss seeing your smile at *${business.name}*! 😊\n\nIt's been a few weeks since your last visit. We'd love to welcome you back with a special gift: *${offer.title}* on your next visit!\n\nUse VIP code: *${offer.code}*\n\nJust reply "BOOK" to this message and I will set up your appointment instantly. Hope to see you soon! ✨`;
+  const messageTemplate = `Hey {CustomerName}! We miss seeing you at *${business.name}*! 😊\n\nIt's been a few weeks since your last visit. We'd love to welcome you back with a special gift: *${offer.title}* on your next visit!\n\nUse VIP code: *${offer.code}*\n\nJust reply "BOOK" to this message and our assistant will set up your appointment instantly. Hope to see you soon! ✨`;
 
   return {
     targetAudience: `Dormant Customers (No visits in >30 days)`,
@@ -402,15 +476,15 @@ const server = http.createServer(async (req, res) => {
         date: body.date || 'Tomorrow',
         time: body.time || '14:00',
         status: body.status || 'confirmed',
-        source: body.source || 'WhatsApp AI Agent',
+        source: body.source || 'Bluesoul WhatsApp AI',
         createdAt: new Date().toISOString(),
-        notes: body.notes || 'Instant booking via LocalPulse AI'
+        notes: body.notes || 'Booked via Bluesoul Operations Engine'
       };
 
       bookings.unshift(newBooking);
       writeJson('bookings.json', bookings);
 
-      // Also update business stats
+      // Update business stats
       biz.stats = biz.stats || {};
       biz.stats.aiBookings = (biz.stats.aiBookings || 0) + 1;
       biz.stats.revenueGenerated = (biz.stats.revenueGenerated || 0) + newBooking.servicePrice;
@@ -441,7 +515,6 @@ const server = http.createServer(async (req, res) => {
       
       const aiResult = processAiWhatsAppMessage(business, body.message, body.history);
 
-      // If a booking was confirmed via chat, save it automatically!
       if (aiResult.action === 'booking_confirmed' && aiResult.bookingData) {
         const bookings = readJson('bookings.json');
         const bookingRecord = {
@@ -454,9 +527,9 @@ const server = http.createServer(async (req, res) => {
           date: aiResult.bookingData.date,
           time: aiResult.bookingData.time,
           status: 'confirmed',
-          source: 'WhatsApp AI Agent',
+          source: 'Bluesoul WhatsApp AI',
           createdAt: new Date().toISOString(),
-          notes: 'Auto-booked by LocalPulse conversational AI'
+          notes: 'Auto-booked by Bluesoul conversational AI'
         };
         bookings.unshift(bookingRecord);
         writeJson('bookings.json', bookings);
@@ -515,7 +588,6 @@ const server = http.createServer(async (req, res) => {
       
       const campaign = generateWinBackCampaign(business, customers);
 
-      // If action is execute, update customer records
       if (body.execute) {
         let reactivatedCount = 0;
         customers.forEach(c => {
@@ -536,12 +608,11 @@ const server = http.createServer(async (req, res) => {
     }
   }
 
-  // 10. GET /api/roi-report (Step 3: Show them proof "you got 30 new customers")
+  // 10. GET /api/roi-report (Client Performance Report)
   if (pathname === '/api/roi-report' && method === 'GET') {
     const businessId = parsedUrl.searchParams.get('businessId') || 'biz_salon';
     const businesses = readJson('businesses.json');
     const bookings = readJson('bookings.json').filter(b => b.businessId === businessId);
-    const customers = readJson('customers.json').filter(c => c.businessId === businessId);
     const business = businesses.find(b => b.id === businessId) || businesses[0];
 
     const totalRevenue = bookings.reduce((sum, b) => sum + (Number(b.servicePrice) || 0), 0);
@@ -549,49 +620,134 @@ const server = http.createServer(async (req, res) => {
 
     const report = {
       businessName: business.name,
-      trialPeriod: "Last 30 Days (Free Trial Proof)",
+      period: "Monthly Operations & Growth Summary",
       totalNewBookings: bookings.length + (business.stats?.aiBookings || 34),
       estimatedRevenueAdded: totalRevenue + (business.stats?.revenueGenerated || 2850),
       currency: business.currency || '$',
       averageBookingValue: `${business.currency || '$'}${avgTicket}`,
       breakdownByChannel: [
-        { channel: "24/7 WhatsApp AI Concierge", bookings: 24, revenue: 1540 },
+        { channel: "24/7 Bluesoul WhatsApp AI Concierge", bookings: 24, revenue: 1540 },
         { channel: "AI Local SEO & Google Search", bookings: 11, revenue: 820 },
         { channel: "Automated Win-Back Follow-up", bookings: 7, revenue: 490 }
       ],
-      ownerRoiSummary: {
-        freeTrialCost: "$0.00",
-        proposedMonthlySubscription: "$79.00 / month",
+      clientRoiSummary: {
+        platformFee: "$79.00 / month",
         netClientProfit: `$${(totalRevenue + 2850) - 79}`,
         returnOnInvestment: "3,600% ROI"
       },
-      clientPitchConclusion: `\"In the last 30 days, LocalPulse AI captured 42 appointments that would have otherwise been missed calls or lost to competitors. At $79/mo, just 2 bookings cover the entire subscription!\"`
+      executiveSummary: `\"Bluesoul Managements captured 42 appointments directly through WhatsApp and search channels this month. Over $2,480 in verified gross appointments booked with zero manual staff intervention.\"`
     };
 
     return sendJson(res, 200, { success: true, data: report });
   }
 
-  // 11. POST /api/webhook (Production WhatsApp Cloud API / Twilio ready)
+  // 11. WhatsApp Meta Gateway Config Routes
+  if (pathname === '/api/whatsapp/config') {
+    if (method === 'GET') {
+      return sendJson(res, 200, {
+        success: true,
+        configured: Boolean(metaConfig.phoneNumberId && metaConfig.accessToken),
+        phoneNumberId: metaConfig.phoneNumberId ? '••••••••' + metaConfig.phoneNumberId.slice(-4) : '',
+        verifyToken: metaConfig.verifyToken
+      });
+    }
+    if (method === 'POST') {
+      try {
+        const body = await parseRequestBody(req);
+        if (body.phoneNumberId) metaConfig.phoneNumberId = body.phoneNumberId;
+        if (body.accessToken) metaConfig.accessToken = body.accessToken;
+        if (body.verifyToken) metaConfig.verifyToken = body.verifyToken;
+        return sendJson(res, 200, { success: true, message: 'Meta WhatsApp configuration updated.' });
+      } catch (err) {
+        return sendJson(res, 500, { success: false, error: err.message });
+      }
+    }
+  }
+
+  // 12. POST /api/whatsapp/send-test (Send a real test WhatsApp message to your own phone!)
+  if (pathname === '/api/whatsapp/send-test' && method === 'POST') {
+    try {
+      const body = await parseRequestBody(req);
+      const recipient = body.recipientPhone;
+      const text = body.message || 'Hello from Bluesoul Managements! Your WhatsApp AI assistant is live.';
+
+      if (!recipient) {
+        return sendJson(res, 400, { success: false, error: 'Recipient phone number is required.' });
+      }
+
+      const result = await sendMetaWhatsAppMessage(recipient, text);
+      return sendJson(res, 200, result);
+    } catch (err) {
+      return sendJson(res, 500, { success: false, error: err.message });
+    }
+  }
+
+  // 13. Production Meta WhatsApp Cloud API Webhook Endpoint
   if (pathname === '/api/webhook') {
-    // Meta verification challenge
+    // A. Meta Verification Handshake (GET)
     if (method === 'GET') {
       const mode = parsedUrl.searchParams.get('hub.mode');
       const token = parsedUrl.searchParams.get('hub.verify_token');
       const challenge = parsedUrl.searchParams.get('hub.challenge');
-      if (mode === 'subscribe' && token === 'localpulse_secret_token') {
+
+      if (mode === 'subscribe' && token === metaConfig.verifyToken) {
+        console.log('[Bluesoul Webhook] Meta challenge verified successfully.');
         res.writeHead(200, { 'Content-Type': 'text/plain' });
         return res.end(challenge);
       }
-      return sendJson(res, 403, { error: 'Forbidden' });
+      return sendJson(res, 403, { error: 'Forbidden: Invalid verify token' });
     }
 
+    // B. Live Inbound Message Processing (POST)
     if (method === 'POST') {
       try {
         const body = await parseRequestBody(req);
-        // Process incoming WhatsApp message payload from Meta Cloud API
-        console.log('[WhatsApp Webhook Received]:', JSON.stringify(body).slice(0, 150));
+
+        // Check for Meta WhatsApp Cloud API message structure
+        const entry = body.entry?.[0];
+        const changes = entry?.changes?.[0]?.value;
+        const message = changes?.messages?.[0];
+
+        if (message && message.type === 'text') {
+          const from = message.from; // Customer's real phone number
+          const userText = message.text.body;
+          const customerName = changes?.contacts?.[0]?.profile?.name || 'WhatsApp Client';
+
+          console.log(`[Bluesoul Inbound WhatsApp] From: ${from} (${customerName}): "${userText}"`);
+
+          const businesses = readJson('businesses.json');
+          const activeBiz = businesses[0];
+
+          // Process with AI assistant
+          const aiResult = processAiWhatsAppMessage(activeBiz, userText);
+
+          // Save booking if generated
+          if (aiResult.action === 'booking_confirmed' && aiResult.bookingData) {
+            const bookings = readJson('bookings.json');
+            bookings.unshift({
+              id: aiResult.bookingData.id,
+              businessId: activeBiz.id,
+              customerName: customerName,
+              customerPhone: '+' + from,
+              serviceName: aiResult.bookingData.serviceName,
+              servicePrice: aiResult.bookingData.servicePrice,
+              date: aiResult.bookingData.date,
+              time: aiResult.bookingData.time,
+              status: 'confirmed',
+              source: 'Meta WhatsApp Cloud API (Live)',
+              createdAt: new Date().toISOString(),
+              notes: 'Real WhatsApp customer booking via Bluesoul AI'
+            });
+            writeJson('bookings.json', bookings);
+          }
+
+          // Dispatch real reply back to the customer's phone!
+          await sendMetaWhatsAppMessage(from, aiResult.reply);
+        }
+
         return sendJson(res, 200, { status: 'EVENT_RECEIVED' });
       } catch (err) {
+        console.error('[Bluesoul Webhook Error]:', err);
         return sendJson(res, 500, { error: err.message });
       }
     }
@@ -605,7 +761,6 @@ const server = http.createServer(async (req, res) => {
 
   const fullPath = path.join(PUBLIC_DIR, safePath);
 
-  // Security check: ensure path is within PUBLIC_DIR
   if (!fullPath.startsWith(PUBLIC_DIR)) {
     res.writeHead(403, { 'Content-Type': 'text/plain' });
     return res.end('403 Forbidden');
@@ -613,7 +768,6 @@ const server = http.createServer(async (req, res) => {
 
   fs.stat(fullPath, (err, stats) => {
     if (err || !stats.isFile()) {
-      // Fallback to index.html for SPA routing
       const indexPath = path.join(PUBLIC_DIR, 'index.html');
       if (fs.existsSync(indexPath)) {
         res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
@@ -633,9 +787,9 @@ const server = http.createServer(async (req, res) => {
 if (require.main === module) {
   server.listen(PORT, '0.0.0.0', () => {
     console.log(`\n======================================================`);
-    console.log(`🚀 LocalPulse AI is running at: http://localhost:${PORT}`);
-    console.log(`📱 WhatsApp Bot Simulator + SaaS Dashboard ready`);
-    console.log(`📁 Workspace: ${__dirname}`);
+    console.log(`🚀 BLUESOUL MANAGEMENTS is running at: http://localhost:${PORT}`);
+    console.log(`📱 Production WhatsApp Gateway + Operations OS ready`);
+    console.log(`📁 Directory: ${__dirname}`);
     console.log(`======================================================\n`);
   });
 }

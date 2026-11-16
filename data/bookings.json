@@ -1,5 +1,47 @@
 [
   {
+    "id": "BK-1527",
+    "businessId": "biz_salon",
+    "customerName": "Alex Smith",
+    "customerPhone": "+1 (555) 349-2199",
+    "serviceName": "Signature Haircut & Styling",
+    "servicePrice": 45,
+    "date": "Tomorrow",
+    "time": "3 PM",
+    "status": "confirmed",
+    "source": "Bluesoul WhatsApp AI",
+    "createdAt": "2026-11-16T14:14:14.647Z",
+    "notes": "Auto-booked by Bluesoul conversational AI"
+  },
+  {
+    "id": "BK-5118",
+    "businessId": "biz_salon",
+    "customerName": "Demo User",
+    "customerPhone": "+1 (555) 438-9921",
+    "serviceName": "Signature Haircut & Styling",
+    "servicePrice": 45,
+    "date": "Tomorrow",
+    "time": "3 PM",
+    "status": "confirmed",
+    "source": "WhatsApp AI Agent",
+    "createdAt": "2026-11-15T18:46:42.114Z",
+    "notes": "Auto-booked by LocalPulse conversational AI"
+  },
+  {
+    "id": "BK-4866",
+    "businessId": "biz_salon",
+    "customerName": "Alex Smith",
+    "customerPhone": "+1 (555) 349-2199",
+    "serviceName": "Signature Haircut & Styling",
+    "servicePrice": 45,
+    "date": "Tomorrow",
+    "time": "3 PM",
+    "status": "confirmed",
+    "source": "WhatsApp AI Agent",
+    "createdAt": "2026-11-15T18:45:18.647Z",
+    "notes": "Auto-booked by LocalPulse conversational AI"
+  },
+  {
     "id": "BK-1288",
     "businessId": "biz_salon",
     "customerName": "Alex Smith",

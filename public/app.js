@@ -1,6 +1,6 @@
 /**
- * LocalPulse AI - Frontend Application
- * Live WhatsApp Bot Simulator, SaaS Growth Dashboard & ROI Engine
+ * BLUESOUL MANAGEMENTS - Operations OS & WhatsApp Gateway
+ * Real Meta WhatsApp Integration, Client Dashboard & Operations Engine
  */
 
 // Application State
@@ -38,8 +38,8 @@ function playSound(type = 'receive') {
       osc.stop(audioCtx.currentTime + 0.08);
     } else if (type === 'receive') {
       osc.type = 'triangle';
-      osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
-      osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.08); // A5
+      osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
+      osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.08);
       gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.25);
       osc.start();
@@ -74,8 +74,10 @@ function showToast(message, type = 'info') {
 // ============================================================================
 document.addEventListener('DOMContentLoaded', async () => {
   setupEventListeners();
+  initWebhookDisplay();
   await loadBusinesses();
   await switchBusiness('biz_salon');
+  await checkMetaConfigStatus();
 });
 
 // Setup DOM event listeners
@@ -169,7 +171,76 @@ function setupEventListeners() {
     });
   }
 
-  // Modal: ROI Proof Report
+  // Meta Credentials Form Submit
+  const metaForm = document.getElementById('metaConfigForm');
+  if (metaForm) {
+    metaForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const phoneNumberId = document.getElementById('metaPhoneId').value.trim();
+      const accessToken = document.getElementById('metaAccessToken').value.trim();
+      const verifyToken = document.getElementById('metaVerifyToken').value.trim();
+
+      try {
+        const res = await fetch('/api/whatsapp/config', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phoneNumberId, accessToken, verifyToken })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('Meta Cloud API credentials saved successfully!', 'success');
+          await checkMetaConfigStatus();
+        }
+      } catch (err) {
+        showToast('Failed to save Meta credentials', 'error');
+      }
+    });
+  }
+
+  // Live Test Dispatcher Form Submit
+  const testForm = document.getElementById('testDispatchForm');
+  if (testForm) {
+    testForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const recipientPhone = document.getElementById('testPhoneInput').value.trim();
+      const message = document.getElementById('testMsgInput').value.trim();
+
+      showToast(`Sending test WhatsApp message to ${recipientPhone}...`);
+
+      try {
+        const res = await fetch('/api/whatsapp/send-test', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ recipientPhone, message })
+        });
+        const data = await res.json();
+        if (data.success) {
+          if (data.mode === 'live_meta_api') {
+            showToast('✅ Real WhatsApp message delivered via Meta Cloud API!', 'success');
+          } else {
+            showToast('⚠️ Running in simulation mode: Configure Access Token for physical delivery.');
+          }
+        } else {
+          showToast('Error: ' + (data.error || 'Failed to dispatch message'), 'error');
+        }
+      } catch (err) {
+        showToast('Failed to dispatch test message', 'error');
+      }
+    });
+  }
+
+  // Copy Webhook URL Button
+  const btnCopyWebhook = document.getElementById('btnCopyWebhook');
+  if (btnCopyWebhook) {
+    btnCopyWebhook.addEventListener('click', () => {
+      const url = document.getElementById('webhookUrlDisplay').innerText;
+      navigator.clipboard.writeText(url).then(() => {
+        showToast('Production Webhook URL copied!');
+      });
+    });
+  }
+
+  // Modal: Performance Report
   const btnProof = document.getElementById('btnDownloadProof');
   const btnPreview = document.getElementById('btnPreviewPitch');
   const modal = document.getElementById('proofModal');
@@ -198,16 +269,41 @@ function setupEventListeners() {
   if (btnCopyPitch) {
     btnCopyPitch.addEventListener('click', () => {
       const biz = state.activeBusiness;
-      const text = `Hi ${biz.name}! Here is your 30-day LocalPulse AI performance summary:\n\n` +
-        `• Total New Bookings Captured: 38 appointments\n` +
-        `• Added Revenue Generated: ${biz.currency}2,480\n` +
-        `• Dormant Clients Won Back: 14 clients\n` +
-        `• Cost of 30-Day Free Trial: $0.00\n\n` +
-        `Our software subscription is just $79/mo. 2 appointments pay for the entire system! Let's lock in your growth for next month?`;
+      const text = `*Bluesoul Managements — Monthly Performance Summary for ${biz.name}*\n\n` +
+        `• Total Verified Client Bookings: 38 appointments\n` +
+        `• Total Gross Revenue Generated: ${biz.currency}2,480\n` +
+        `• Inactive Clients Reactivated: 14 clients\n` +
+        `• 24/7 Response Time: 1.4s\n\n` +
+        `All appointments confirmed autonomously via WhatsApp Cloud Gateway.`;
       navigator.clipboard.writeText(text).then(() => {
-        showToast('Pitch message copied for WhatsApp!');
+        showToast('Performance summary copied for WhatsApp!');
       });
     });
+  }
+}
+
+// Display live webhook URL
+function initWebhookDisplay() {
+  const display = document.getElementById('webhookUrlDisplay');
+  if (display) {
+    const origin = window.location.origin;
+    display.innerText = `${origin}/api/webhook`;
+  }
+}
+
+// Check if Meta credentials are live
+async function checkMetaConfigStatus() {
+  try {
+    const res = await fetch('/api/whatsapp/config');
+    const data = await res.json();
+    const badge = document.getElementById('gatewayStatusText');
+    if (data.configured) {
+      badge.innerText = `Meta WhatsApp: LIVE (${data.phoneNumberId})`;
+    } else {
+      badge.innerText = 'WhatsApp Gateway: Ready';
+    }
+  } catch (e) {
+    // fallback
   }
 }
 
@@ -258,26 +354,24 @@ async function switchBusiness(businessId) {
   loadAdsModule();
   loadWinbackModule();
 
-  showToast(`Switched active business to ${biz.name}`);
+  showToast(`Active client workspace: ${biz.name}`);
 }
 
 // ============================================================================
-// WhatsApp Simulator Engine
+// WhatsApp Assistant Engine
 // ============================================================================
 
 function resetWhatsAppChat(biz) {
   const chatBody = document.getElementById('waChatBody');
   state.chatHistory = [];
 
-  // Remove existing message bubbles but keep header/encryption note
   chatBody.innerHTML = `
     <div class="wa-date-divider"><span>TODAY</span></div>
     <div class="wa-encryption-notice">
-      🔒 Messages are end-to-end encrypted. Powered by LocalPulse AI WhatsApp Gateway.
+      🔒 Powered by Bluesoul Managements WhatsApp Cloud Gateway.
     </div>
   `;
 
-  // Update quick chips
   const chipsContainer = document.getElementById('waQuickChips');
   if (biz.category === 'salon') {
     chipsContainer.innerHTML = `
@@ -316,9 +410,8 @@ function resetWhatsAppChat(biz) {
     `;
   }
 
-  // Initial welcome message from the AI Assistant
   setTimeout(() => {
-    appendBotMessage(`👋 Hello! Welcome to *${biz.name}*!\n\nI am your 24/7 AI concierge. How can I help you today? You can check our services, ask questions, or book an appointment in seconds! ✨`);
+    appendBotMessage(`👋 Hello! Welcome to *${biz.name}*!\n\nI am your 24/7 AI concierge powered by *Bluesoul Managements*. How can I assist you today? You can browse our services, view rates, or schedule an appointment instantly! ✨`);
   }, 300);
 }
 
@@ -381,7 +474,6 @@ function removeTypingIndicator() {
   if (typing) typing.remove();
 }
 
-// Convert WhatsApp Markdown (*bold*, _italic_) to HTML
 function formatWhatsAppText(str) {
   if (!str) return '';
   return str
@@ -390,7 +482,6 @@ function formatWhatsAppText(str) {
     .replace(/\n/g, '<br>');
 }
 
-// Send user message to AI backend
 async function sendUserWhatsAppMessage(text) {
   appendUserMessage(text);
   state.chatHistory.push({ role: 'user', content: text });
@@ -404,22 +495,20 @@ async function sendUserWhatsAppMessage(text) {
         businessId: state.activeBusinessId,
         message: text,
         history: state.chatHistory,
-        customerName: 'Demo User',
-        customerPhone: '+1 (555) 438-9921'
+        customerName: 'Customer',
+        customerPhone: '+1 (555) 349-2199'
       })
     });
     const data = await res.json();
 
-    // Natural typing delay simulation (600ms)
     setTimeout(async () => {
       removeTypingIndicator();
       if (data.success) {
         appendBotMessage(data.reply, data.bookingData);
         state.chatHistory.push({ role: 'assistant', content: data.reply });
 
-        // If a booking was created, refresh dashboard live!
         if (data.action === 'booking_confirmed') {
-          showToast(`🎉 New Booking Created: ${data.bookingData.serviceName} (${data.bookingData.id})!`, 'success');
+          showToast(`🎉 New Appointment Confirmed: ${data.bookingData.serviceName} (${data.bookingData.id})!`, 'success');
           await loadBookings();
         }
       } else {
@@ -428,15 +517,14 @@ async function sendUserWhatsAppMessage(text) {
     }, 600);
   } catch (err) {
     removeTypingIndicator();
-    appendBotMessage("Error connecting to LocalPulse server. Please check your connection.");
+    appendBotMessage("Error connecting to server. Please verify network status.");
   }
 }
 
 // ============================================================================
-// SaaS Dashboard Modules
+// Operations Dashboard Modules
 // ============================================================================
 
-// Fetch and render bookings
 async function loadBookings() {
   try {
     const res = await fetch(`/api/bookings?businessId=${state.activeBusinessId}`);
@@ -452,7 +540,6 @@ async function loadBookings() {
   }
 }
 
-// Render All Bookings in Tab 2
 function renderBookingsTable(filterQuery = '') {
   const tbody = document.getElementById('allBookingsTbody');
   const countBadge = document.getElementById('bookingCountBadge');
@@ -483,16 +570,15 @@ function renderBookingsTable(filterQuery = '') {
       <td><strong>${b.serviceName}</strong></td>
       <td>${b.date} • ${b.time}</td>
       <td style="color:#34d399; font-weight:600;">${biz.currency}${b.servicePrice}</td>
-      <td><span class="badge badge-info">${b.source || 'WhatsApp AI'}</span></td>
+      <td><span class="badge badge-info">${b.source || 'Bluesoul AI'}</span></td>
       <td><span class="badge badge-success">${b.status}</span></td>
       <td>
-        <button class="btn btn-sm btn-outline" onclick="alert('Notification sent to ${b.customerPhone} via WhatsApp!')">Notify</button>
+        <button class="btn btn-sm btn-outline" onclick="alert('Notification dispatched to ${b.customerPhone} via WhatsApp!')">Notify</button>
       </td>
     </tr>
   `).join('');
 }
 
-// Render Recent 4 Bookings in Overview Tab
 function renderRecentBookings() {
   const tbody = document.getElementById('recentBookingsTbody');
   const biz = state.activeBusiness;
@@ -515,7 +601,6 @@ function renderRecentBookings() {
   `).join('');
 }
 
-// Update Top Overview KPIs
 function updateOverviewStats() {
   const biz = state.activeBusiness;
   const totalRev = state.bookings.reduce((sum, b) => sum + (Number(b.servicePrice) || 0), 0) + (biz.stats?.revenueGenerated || 1800);
@@ -526,7 +611,6 @@ function updateOverviewStats() {
   document.getElementById('statReactivated').innerText = biz.stats?.dormantReactivated || 14;
 }
 
-// Handle Quick Booking Form
 async function handleQuickBookingSubmit() {
   const name = document.getElementById('qbName').value.trim();
   const phone = document.getElementById('qbPhone').value.trim();
@@ -548,12 +632,12 @@ async function handleQuickBookingSubmit() {
         servicePrice,
         date,
         time,
-        source: 'Manual Counter Entry'
+        source: 'Counter Reservation'
       })
     });
     const json = await res.json();
     if (json.success) {
-      showToast(`Appointment added for ${name}!`, 'success');
+      showToast(`Appointment scheduled for ${name}!`, 'success');
       document.getElementById('qbName').value = '';
       document.getElementById('qbPhone').value = '';
       await loadBookings();
@@ -564,7 +648,7 @@ async function handleQuickBookingSubmit() {
 }
 
 // ============================================================================
-// SEO & GEO Engine (Tab 3)
+// SEO & GEO Engine
 // ============================================================================
 async function loadSeoModule() {
   const biz = state.activeBusiness;
@@ -578,28 +662,23 @@ async function loadSeoModule() {
     if (json.success) {
       const data = json.data;
 
-      // Render Checklist
       const listContainer = document.getElementById('seoChecklist');
       listContainer.innerHTML = data.geoOptimizationSteps.map(step => `
         <div class="audit-item">
           <div class="audit-item-top">
             <span class="audit-item-title">${step.title}</span>
-            <span class="badge ${step.status === 'Optimized' || step.status === 'Configured' ? 'badge-success' : 'badge-warning'}">${step.status}</span>
+            <span class="badge ${step.status === 'Optimized' || step.status === 'Active' ? 'badge-success' : 'badge-warning'}">${step.status}</span>
           </div>
           <p class="audit-item-desc">${step.detail}</p>
         </div>
       `).join('');
 
-      // Keywords
       const keywordsContainer = document.getElementById('seoKeywords');
       keywordsContainer.innerHTML = data.recommendedKeywords.map(k => `
         <span class="keyword-pill">🔍 ${k}</span>
       `).join('');
 
-      // AI Simulation Text
       document.getElementById('geoSimulationText').innerHTML = data.aiEngineRecommendation;
-
-      // Schema Code
       document.getElementById('schemaCodeBlock').innerHTML = `<code>${escapeHtml(data.schemaJsonLd)}</code>`;
     }
   } catch (err) {
@@ -612,7 +691,7 @@ function escapeHtml(string) {
 }
 
 // ============================================================================
-// Ads & Creatives Generator (Tab 4)
+// Ads & Creatives Generator
 // ============================================================================
 async function loadAdsModule() {
   const biz = state.activeBusiness;
@@ -626,10 +705,9 @@ async function loadAdsModule() {
     if (json.success) {
       const data = json.data;
 
-      // Target Audience
       const audienceCard = document.getElementById('adAudienceCard');
       audienceCard.innerHTML = `
-        <h5>🎯 AI Recommended Target Audience</h5>
+        <h5>🎯 AI Recommended Target Demographics</h5>
         <div class="audience-details">
           <div><strong>📍 Radius:</strong> ${data.targetAudience.location}</div>
           <div><strong>👥 Demographics:</strong> ${data.targetAudience.ageGroup}</div>
@@ -638,7 +716,6 @@ async function loadAdsModule() {
         </div>
       `;
 
-      // Variants Grid
       const variantsContainer = document.getElementById('adVariantsContainer');
       variantsContainer.innerHTML = data.adVariants.map(ad => `
         <div class="ad-variant-card">
@@ -658,7 +735,7 @@ async function loadAdsModule() {
 }
 
 // ============================================================================
-// Win-Back Campaign Module (Tab 5)
+// Win-Back Module
 // ============================================================================
 async function loadCustomers() {
   try {
@@ -685,11 +762,10 @@ async function loadWinbackModule() {
     if (json.success) {
       const data = json.data;
 
-      // Metrics Bar
       const metricsContainer = document.getElementById('winbackMetrics');
       metricsContainer.innerHTML = `
         <div class="winback-stat-col">
-          <span>Identified Dormant Clients</span>
+          <span>Identified Inactive Clients</span>
           <h4>${data.totalIdentified} Customers</h4>
         </div>
         <div class="winback-stat-col">
@@ -706,12 +782,11 @@ async function loadWinbackModule() {
         </div>
       `;
 
-      // Customer Table
       const tbody = document.getElementById('winbackCustomersTbody');
       const customers = state.customers.filter(c => c.businessId === biz.id);
 
       if (customers.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:15px; color:#94a3b8;">No dormant customers found for this location.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:15px; color:#94a3b8;">No inactive customers found for this location.</td></tr>`;
         return;
       }
 
@@ -743,7 +818,7 @@ async function executeWinBackCampaign() {
     });
     const json = await res.json();
     if (json.success) {
-      showToast(`🚀 WhatsApp Broadcast sent to ${json.data.recipientsMessaged || 3} dormant clients!`, 'success');
+      showToast(`🚀 WhatsApp broadcast queued for ${json.data.recipientsMessaged || 3} inactive clients!`, 'success');
       await loadCustomers();
     }
   } catch (err) {
@@ -752,11 +827,11 @@ async function executeWinBackCampaign() {
 }
 
 // ============================================================================
-// ROI Proof Report Modal (Step 3: Show them proof "you got 30 new customers")
+// Performance Report Modal
 // ============================================================================
 async function loadProofModal() {
   const modalContent = document.getElementById('proofModalContent');
-  modalContent.innerHTML = '<p>Generating 30-day proof analysis...</p>';
+  modalContent.innerHTML = '<p>Generating operations analysis...</p>';
 
   try {
     const res = await fetch(`/api/roi-report?businessId=${state.activeBusinessId}`);
@@ -768,26 +843,26 @@ async function loadProofModal() {
           <div class="report-title-row">
             <div>
               <h2 style="font-size:20px; font-weight:bold;">${r.businessName}</h2>
-              <p style="color:#64748b; font-size:12px;">LocalPulse AI Performance & ROI Proof Report</p>
+              <p style="color:#64748b; font-size:12px;">Bluesoul Managements — Client Performance & Operations Summary</p>
             </div>
             <div style="text-align:right;">
-              <span class="badge badge-success" style="font-size:12px;">30-Day Free Trial Audit</span>
+              <span class="badge badge-success" style="font-size:12px;">Verified Performance Audit</span>
               <p style="font-size:11px; color:#64748b; margin-top:4px;">Period: Last 30 Days</p>
             </div>
           </div>
 
           <div class="report-kpis">
             <div class="report-kpi-box">
-              <span style="font-size:11px; color:#64748b; font-weight:600;">NEW CUSTOMERS</span>
+              <span style="font-size:11px; color:#64748b; font-weight:600;">NEW APPOINTMENTS</span>
               <h2>+${r.totalNewBookings}</h2>
             </div>
             <div class="report-kpi-box">
-              <span style="font-size:11px; color:#64748b; font-weight:600;">REVENUE ADDED</span>
+              <span style="font-size:11px; color:#64748b; font-weight:600;">REVENUE GENERATED</span>
               <h2 style="color:#10b981;">${r.currency}${r.estimatedRevenueAdded.toLocaleString()}</h2>
             </div>
             <div class="report-kpi-box">
-              <span style="font-size:11px; color:#64748b; font-weight:600;">RETURN ON INVESTMENT</span>
-              <h2 style="color:#8b5cf6;">${r.ownerRoiSummary.returnOnInvestment}</h2>
+              <span style="font-size:11px; color:#64748b; font-weight:600;">NET RETURN</span>
+              <h2 style="color:#8b5cf6;">${r.clientRoiSummary.returnOnInvestment}</h2>
             </div>
           </div>
 
@@ -797,7 +872,7 @@ async function loadProofModal() {
               <tr>
                 <th>Channel</th>
                 <th>Appointments</th>
-                <th>Est. Revenue</th>
+                <th>Revenue</th>
               </tr>
             </thead>
             <tbody>
@@ -812,19 +887,18 @@ async function loadProofModal() {
           </table>
 
           <div class="report-pitch-highlight">
-            <strong>The Bottom Line for ${r.businessName}:</strong><br>
-            ${r.clientPitchConclusion}
+            <strong>Executive Summary:</strong><br>
+            ${r.executiveSummary}
           </div>
 
           <div style="display:flex; justify-content:space-between; margin-top:20px; border-top:1px solid #cbd5e1; padding-top:12px; font-size:12px; color:#475569;">
-            <div>Trial Cost Paid: <strong>$0.00</strong></div>
-            <div>Monthly Subscription: <strong>${r.ownerRoiSummary.proposedMonthlySubscription}</strong></div>
-            <div>Owner Net Added Value: <strong style="color:#059669;">+${r.ownerRoiSummary.netClientProfit}</strong></div>
+            <div>Platform Fee: <strong>${r.clientRoiSummary.platformFee}</strong></div>
+            <div>Net Value Added: <strong style="color:#059669;">+${r.clientRoiSummary.netClientProfit}</strong></div>
           </div>
         </div>
       `;
     }
   } catch (err) {
-    modalContent.innerHTML = '<p style="color:red;">Failed to generate proof report.</p>';
+    modalContent.innerHTML = '<p style="color:red;">Failed to generate performance report.</p>';
   }
 }

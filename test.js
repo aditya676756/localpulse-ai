@@ -1,6 +1,6 @@
 /**
- * LocalPulse AI - In-Memory Engine & API Test Suite
- * Tests full HTTP routing, AI reasoning, and persistence with zero TCP socket overhead.
+ * BLUESOUL MANAGEMENTS - In-Memory Engine & API Test Suite
+ * Tests full HTTP routing, Meta WhatsApp Webhooks, and Operations Engine
  */
 
 const { EventEmitter } = require('events');
@@ -47,7 +47,7 @@ function makeRequest(method, urlPath, body = null) {
 }
 
 async function runTests() {
-  console.log('🚀 Starting LocalPulse AI Test Suite (In-Memory Engine)...\n');
+  console.log('🚀 Starting Bluesoul Managements Test Suite (In-Memory Engine)...\n');
 
   try {
     // 1. Test GET /api/businesses
@@ -125,24 +125,35 @@ async function runTests() {
     }
     console.log(`✅ Win-back broadcast simulated for dormant customers (Reactivation rate: ${winbackRes.body.data.projectedReactivationRate}).`);
 
-    // 9. Test GET /api/roi-report (Step 3 Proof Hub)
-    console.log('Test 9: Testing 30-Day Client Proof & ROI Generator...');
+    // 9. Test GET /api/roi-report (Client Performance Report)
+    console.log('Test 9: Testing Client Performance & Operations Generator...');
     const roiRes = await makeRequest('GET', '/api/roi-report?businessId=biz_salon');
-    if (roiRes.status !== 200 || !roiRes.body.data.ownerRoiSummary) {
+    if (roiRes.status !== 200 || !roiRes.body.data.clientRoiSummary) {
       throw new Error('ROI report failed');
     }
-    console.log(`✅ ROI Proof report generated (${roiRes.body.data.totalNewBookings} bookings, ${roiRes.body.data.ownerRoiSummary.returnOnInvestment}).`);
+    console.log(`✅ Performance report generated (${roiRes.body.data.totalNewBookings} bookings, ${roiRes.body.data.clientRoiSummary.returnOnInvestment}).`);
 
     // 10. Test Meta Webhook Verification Handshake
     console.log('Test 10: Testing Meta WhatsApp Cloud API Webhook handshake...');
-    const webhookRes = await makeRequest('GET', '/api/webhook?hub.mode=subscribe&hub.verify_token=localpulse_secret_token&hub.challenge=VERIFIED_CHALLENGE');
+    const webhookRes = await makeRequest('GET', '/api/webhook?hub.mode=subscribe&hub.verify_token=bluesoul_verify_token&hub.challenge=VERIFIED_CHALLENGE');
     if (webhookRes.status !== 200 || webhookRes.body !== 'VERIFIED_CHALLENGE') {
       throw new Error('Webhook handshake failed');
     }
     console.log('✅ Meta Cloud API Webhook verification handshake successful.');
 
+    // 11. Test Live Test Dispatcher Endpoint
+    console.log('Test 11: Testing Live WhatsApp Dispatcher endpoint...');
+    const dispatchRes = await makeRequest('POST', '/api/whatsapp/send-test', {
+      recipientPhone: '+919999999999',
+      message: 'Test from Bluesoul Gateway'
+    });
+    if (dispatchRes.status !== 200 || !dispatchRes.body.success) {
+      throw new Error('WhatsApp Dispatcher failed');
+    }
+    console.log('✅ WhatsApp Gateway dispatcher endpoint verified.');
+
     console.log('\n======================================================');
-    console.log('🎉 ALL 10 TESTS PASSED! 100% HEALTHY, ROBUST & READY.');
+    console.log('🎉 ALL 11 TESTS PASSED! BLUESOUL MANAGEMENTS READY.');
     console.log('======================================================\n');
     process.exit(0);
   } catch (err) {

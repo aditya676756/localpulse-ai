@@ -1357,3 +1357,61 @@ body {
   from { transform: translateX(100%); opacity: 0; }
   to { transform: translateX(0); opacity: 1; }
 }
+
+/* ==========================================================================
+   Tab 6: Meta WhatsApp Setup & Live Dispatcher Styles
+   ========================================================================== */
+.whatsapp-setup-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 900px) {
+  .whatsapp-setup-grid { grid-template-columns: 1fr; }
+}
+
+.setup-col h5 {
+  font-size: 14px;
+  color: #38bdf8;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.endpoint-box {
+  background: #0f172a;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  margin-top: 14px;
+}
+
+.endpoint-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.endpoint-box code {
+  color: #34d399;
+  font-family: monospace;
+  font-size: 12px;
+  word-break: break-all;
+}
+
+.meta-guide-card {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px dashed var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  margin-top: 14px;
+}
+
+.meta-guide-card h6 {
+  font-size: 12px;
+  color: #f1f5f9;
+  font-weight: 600;
+}
